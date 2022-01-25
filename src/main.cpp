@@ -90,12 +90,12 @@ int main(int argc, char *argv[])
     usage(argv[0]);
   }
 
-  BinFS::BinFS *binfs = new BinFS::BinFS();
 
   std::vector<std::string> folders = parse_folders(argc, argv);
   std::string outfile = parse_output_file(argc, argv);
   std::vector<std::string> files;
 
+  BinFS::BinFS *binfs = new BinFS::BinFS(folders[0]);
   for (const std::string &path : folders)
   {
     files = get_files(path, files);
@@ -107,6 +107,7 @@ int main(int argc, char *argv[])
   }
 
   binfs->output_hpp_file(outfile);
+  delete binfs;
 
   return 0;
 }

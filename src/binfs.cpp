@@ -17,7 +17,7 @@ std::string BinFS::read_file(const std::string &filename)
 {
   std::string filepath = filename;
   // if dirpath is empty and filename is from the root, leave it alone
-  if (!((filename[0] == '/') && (dirpath == "")))
+  if (!((filename[0] == '/')))
   {
       dirpath = dirpath == "" ? "./" : dirpath + "/";
       filepath = dirpath + filename;
@@ -67,14 +67,19 @@ std::string BinFS::hex_to_string(const std::string &in)
   }
 
   size_t cnt = in.length() / 2;
+  output.reserve(cnt);
 
+  char str[3];
+  str[2] = 0;
   for (size_t i = 0; cnt > i; ++i)
   {
     uint32_t s = 0;
     std::stringstream ss;
-    ss << std::hex << in.substr(i * 2, 2);
-    ss >> s;
-
+    int index = i * 2;
+    str[0] = in[index];
+    str[1] = in[index + 1];
+    char *p;
+    s = std::strtol(str, &p, 16);
     output.push_back(static_cast<unsigned char>(s));
   }
 
@@ -148,19 +153,24 @@ void BinFS::output_hpp_file(const std::string &filename)
   out << "      throw std::runtime_error(\"string is not valid length!\");" << std::endl;
   out << "    }" << std::endl;
   out << "    size_t cnt = in.length() / 2;" << std::endl;
-  out << "    for (size_t i = 0; cnt > i; ++i)" << std::endl;
-  out << "    {" << std::endl;
+  out << "    output.reserve(cnt);" << std::endl;
+  out << "    char str[3];" << std::endl;
+  out << "    str[2] = 0;" << std::endl;
+  out << "    for (size_t i = 0; cnt > i; ++i) {" << std::endl;
   out << "      uint32_t s = 0;" << std::endl;
   out << "      std::stringstream ss;" << std::endl;
-  out << "      ss << std::hex << in.substr(i * 2, 2);" << std::endl;
-  out << "      ss >> s;" << std::endl;
-  out << "      output.push_back(static_cast<unsigned char>(s));" << std::endl;
-  out << "    }" << std::endl;
+  out << "      int index = i * 2;" << std::endl;
+  out << "      str[0] = in[index];" << std::endl;
+  out << "      str[1] = in[index + 1];" << std::endl;
+  out << "      char *p;" << std::endl;
+  out << "      s = std::strtol(str, &p, 16);" << std::endl;
+  out << "      output.push_back(static_cast<unsigned char>(s)); }" << std::endl;
   out << "    return output;" << std::endl;
   out << "  }" << std::endl;
   out << "public:" << std::endl;
   out << "  BinFS() {};" << std::endl;
   out << "  ~BinFS() {};" << std::endl;
+  out << "  std::vector<std::pair<std::string, std::string>>& get_files() { return files; }"  << std::endl;
   out << "  std::string get_file(const std::string &filename)" << std::endl;
   out << "  {" << std::endl;
   out << "    auto it = files.begin();" << std::endl;
