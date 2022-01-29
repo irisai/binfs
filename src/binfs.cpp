@@ -16,7 +16,7 @@ bool BinFS::file_exists(const std::string &filename)
 std::string BinFS::read_file(const std::string &filename)
 {
   std::string filepath = filename;
-  // if dirpath is empty and filename is from the root, leave it alone
+  // if filename is from the root, leave it alone
   if (!((filename[0] == '/')))
   {
       dirpath = dirpath == "" ? "./" : dirpath + "/";

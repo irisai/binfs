@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
   std::string outfile = parse_output_file(argc, argv);
   std::vector<std::string> files;
 
+  // use the first folder in the list as the base folder, we only use one folder for our model files
   BinFS::BinFS *binfs = new BinFS::BinFS(folders[0]);
   for (const std::string &path : folders)
   {
